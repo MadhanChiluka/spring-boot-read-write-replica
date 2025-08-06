@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  mysql-master:
+    image: mysql:8.0
+    container_name: mysql-master
+    command: --server-id=1 --log-bin=mysql-bin --binlog-format=row
+    environment:
+      MYSQL_ROOT_PASSWORD: Password@54321
+      MYSQL_DATABASE: employee 
+      MYSQL_USER: replication_user 
+      MYSQL_PASSWORD: Password@54321
+    ports:
+      - "3306:3306"
+
+  mysql-slave:
+    image: mysql:8.0
+    container_name: mysql-slave
+    depends_on:
+      - mysql-master
+    command: --server-id=2 --log-bin=mysql-bin --binlog-format=row
+    environment:
+      MYSQL_ROOT_PASSWORD: Password@54321
+      MYSQL_DATABASE: employee
+      MYSQL_USER: replication_user
+      MYSQL_PASSWORD: Password@54321
+    ports:
+      - "3307:3306"

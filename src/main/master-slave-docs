@@ -1,0 +1,22 @@
+
+1. Configure the Master Server 
+    
+    docker exec -it mysql-master bash
+    mysql -uroot -p
+    
+    SQL Commands
+    ALTER USER 'replication_user'@'%' IDENTIFIED WITH 'mysql_native_password' BY 'Password@54321';
+    GRANT REPLICATION SLAVE ON *.* TO 'replication_user'@'%';
+    FLUSH PRIVILEGES;
+    SHOW MASTER STATUS;
+
+2. Configure the Slave Server 
+    
+    docker exec -it mysql-slave bash
+    mysql -uroot -p
+
+    CHANGE MASTER TO MASTER_HOST='mysql-master', MASTER_USER='replication_user', MASTER_PASSWORD='Password@54321', MASTER_LOG_FILE='mysql-bin.xxxxxx', MASTER_LOG_POS=xxxx;
+
+    START SLAVE;
+
+    SHOW SLAVE STATUS;

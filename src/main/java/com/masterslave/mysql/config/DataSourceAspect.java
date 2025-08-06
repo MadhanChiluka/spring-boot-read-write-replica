@@ -11,7 +11,7 @@ import com.masterslave.mysql.annotations.DataSource;
 @Component
 public class DataSourceAspect {
 
-    @Before(value = "@annotation(datasource)")
+    @Before(value = "@annotation(dataSource)")
     public void dataSourcePoint(JoinPoint joinPoint, DataSource dataSource) {
         DynamicDataSourceHandler.putDataSource(dataSource.value());
     }

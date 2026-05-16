@@ -6,9 +6,11 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.masterslave.mysql.annotations.DataSource;
 import com.masterslave.mysql.entities.Customer;
 import com.masterslave.mysql.model.CustomerRequest;
 import com.masterslave.mysql.repository.CustomerRepository;
+import com.masterslave.mysql.util.DataSourceType;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,6 +32,7 @@ public class CustomerService {
     }
 
     @Transactional(readOnly = true)
+    @DataSource(DataSourceType.SLAVE)
     public List<Customer> getAllCustomers() {
         return customerRepository.findAll();
     }

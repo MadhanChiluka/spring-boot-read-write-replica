@@ -4,12 +4,15 @@ services:
   mysql-master:
     image: mysql:8.0
     container_name: mysql-master
-    command: --server-id=1 --log-bin=mysql-bin --binlog-format=row
+    # Enable GTID so slave can use SOURCE_AUTO_POSITION=1 during configuration
+    command: --server-id=1 --log-bin=mysql-bin --binlog-format=row --gtid-mode=ON --enforce-gtid-consistency=ON
     environment:
       MYSQL_ROOT_PASSWORD: Password@54321
       MYSQL_DATABASE: employee 
       MYSQL_USER: replication_user 
       MYSQL_PASSWORD: Password@54321
+    volumes:
+      - ./docker/async/master-init.sql:/docker-entrypoint-initdb.d/master-init.sql:ro
     ports:
       - "3306:3306"
 
@@ -18,7 +21,7 @@ services:
     container_name: mysql-slave
     depends_on:
       - mysql-master
-    command: --server-id=2 --log-bin=mysql-bin --binlog-format=row
+    command: --server-id=2 --log-bin=mysql-bin --binlog-format=row --gtid-mode=ON --enforce-gtid-consistency=ON
     environment:
       MYSQL_ROOT_PASSWORD: Password@54321
       MYSQL_DATABASE: employee
